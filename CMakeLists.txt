@@ -32,7 +32,3 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
     target_compile_definitions(mx PUBLIC MX_DEBUG=0)
 endif()
-
-if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    target_compile_options(mx PUBLIC -Wno-nullability-completeness)
-endif()

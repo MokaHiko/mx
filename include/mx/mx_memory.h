@@ -12,11 +12,11 @@ typedef struct MX_API {
 	uint8_t* data;
 	size_t length;
 	size_t head;
-} mx_arena;
+} MxArena;
 
-MX_API mx_arena mx_arena_alloc(size_t size);
-MX_API void* mx_arena_push(mx_arena* arena, size_t size);
-MX_API void mx_arena_reset(mx_arena* arena);
-MX_API void mx_arena_free(mx_arena* arena);
+MX_API MxArena mx_arena_alloc(size_t size);
+MX_API void* mx_arena_push(MxArena* arena, size_t size);
+MX_API void mx_arena_reset(MxArena* arena);
+MX_API void mx_arena_free(MxArena* arena);
 
 #endif

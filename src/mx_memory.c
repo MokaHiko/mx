@@ -3,16 +3,17 @@
 #include <stdlib.h>
 #include <assert.h>
 
-mx_arena mx_arena_alloc(size_t size) {
+MxArena mx_arena_alloc(size_t size) {
 	assert(size > 0 && "[Mx]: Arena created with size 0!");
-	return (mx_arena) {
+	return (MxArena) {
 		.data = malloc(size),
 		.length = size,
 		.head = 0,
 	};
 }
 
-void* mx_arena_push(mx_arena* arena, size_t size) {
+void* mx_arena_push(MxArena* arena, size_t size) {
+	assert(size > 0 && "[Mx]: Arena push with size 0!");
 	assert(arena->head + size <= arena->length && "[Mx]: Arena push overflow!");
 
 	void* alloc = arena->data + arena->head;
@@ -21,11 +22,11 @@ void* mx_arena_push(mx_arena* arena, size_t size) {
 	return alloc;
 }
 
-void mx_arena_reset(mx_arena* arena) {
+void mx_arena_reset(MxArena* arena) {
 	arena->head = 0;
 }
 
-void mx_arena_free(mx_arena* arena) {
+void mx_arena_free(MxArena* arena) {
 	assert(arena->length > 0 && "[Mx]: Arena freed with size 0!");
 
 	arena->head = 0;
