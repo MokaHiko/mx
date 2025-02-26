@@ -13,12 +13,12 @@ int mx_read_file(const char* path, size_t* size, void* buffer) {
 
 	if(buffer == NULL) {
 		fclose(fptr);
-		return -1;
+		return MX_SUCCESS;
 	}
 
 	rewind(fptr);
 	fread(buffer, 1, *size, fptr);
 
 	fclose(fptr);
-	return MX_SUCESS;
+	return MX_SUCCESS;
 }

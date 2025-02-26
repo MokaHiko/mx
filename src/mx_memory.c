@@ -14,6 +14,12 @@ MxArena mx_arena_alloc(size_t size) {
 
 void* mx_arena_push(MxArena* arena, size_t size) {
 	assert(size > 0 && "[Mx]: Arena push with size 0!");
+
+#ifdef MX_DEBUG
+	if(arena->head + size >= arena->length) {
+		fprintf(stderr, "Arena requested %zu but has remaining %zu\n", size, arena->length - arena->head);
+	}
+#endif
 	assert(arena->head + size <= arena->length && "[Mx]: Arena push overflow!");
 
 	void* alloc = arena->data + arena->head;
