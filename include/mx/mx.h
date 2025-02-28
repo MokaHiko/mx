@@ -39,4 +39,8 @@
 
 #define MX_SUCCESS (uint16_t)0
 
+typedef uint32_t mx_bool;
+#define MX_FALSE (uint32_t)0
+#define MX_TRUE (uint32_t)1
+
 #endif
