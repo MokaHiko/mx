@@ -1,5 +1,5 @@
-#ifndef MX_FILE_H
-#define MX_FILE_H
+#ifndef MX_FILE_H_
+#define MX_FILE_H_
 
 #include <mx/mx.h>
 

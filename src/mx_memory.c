@@ -1,5 +1,7 @@
 #include <mx/mx_memory.h>
 
+#include "mx/mx_log.h"
+
 #include <stdlib.h>
 #include <assert.h>
 
@@ -17,11 +19,11 @@ void* mx_arena_push(MxArena* arena, size_t size) {
 
 #ifdef MX_DEBUG
 	if(arena->head + size >= arena->length) {
-		fprintf(stderr, "Arena requested %zu but has remaining %zu\n", size, arena->length - arena->head);
+		MX_LOG_ERROR("Arena requested %zu but has remaining %zu\n", size, arena->length - arena->head);
 	}
 #endif
-	assert(arena->head + size <= arena->length && "[Mx]: Arena push overflow!");
 
+	assert(arena->head + size <= arena->length && "[Mx]: Arena push overflow!");
 	void* alloc = arena->data + arena->head;
 	arena->head += size;
 

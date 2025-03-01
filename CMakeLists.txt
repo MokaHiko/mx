@@ -7,10 +7,10 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(MX_BUILD_SHARED_LIBS OFF CACHE BOOL "MX build shared libraries.")
 
 if(MX_BUILD_SHARED_LIBS)
-    add_library(mx SHARED src/mx.c src/mx_memory.c src/mx_file.c csrc/mx_math.c)
+    add_library(mx SHARED src/mx.c src/mx_log.c src/mx_memory.c src/mx_file.c csrc/mx_math.c)
     target_compile_definitions(mx PUBLIC MX_EXPORTS)
 else()
-    add_library(mx STATIC src/mx.c src/mx_memory.c src/mx_file.c src/mx_math.c)
+    add_library(mx STATIC src/mx.c src/mx_log.c src/mx_memory.c src/mx_file.c src/mx_math.c)
 endif()
 
 target_include_directories(mx PUBLIC include)

@@ -1,4 +1,5 @@
 #include "mx/mx_file.h"
+#include <stdio.h>
 
 int mx_read_file(const char* path, size_t* size, void* buffer) {
 	FILE* fptr;

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stdio.h>
 
 #ifndef MX_NULLABLE
     #ifdef __clang__
