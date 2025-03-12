@@ -5,20 +5,20 @@
 #include <stdlib.h>
 #include <assert.h>
 
-MxArena mx_arena_alloc(size_t size) {
+mx_arena mx_arena_alloc(size_t size) {
 	assert(size > 0 && "[Mx]: Arena created with size 0!");
-	return (MxArena) {
+	return (mx_arena) {
 		.data = malloc(size),
 		.length = size,
 		.head = 0,
 	};
 }
 
-void* mx_arena_push(MxArena* arena, size_t size) {
+void* mx_arena_push(mx_arena* arena, size_t size) {
 	assert(size > 0 && "[Mx]: Arena push with size 0!");
 
 #ifdef MX_DEBUG
-	if(arena->head + size >= arena->length) {
+	if(arena->head + size > arena->length) {
 		MX_LOG_ERROR("Arena requested %zu but has remaining %zu\n", size, arena->length - arena->head);
 	}
 #endif
@@ -30,11 +30,11 @@ void* mx_arena_push(MxArena* arena, size_t size) {
 	return alloc;
 }
 
-void mx_arena_reset(MxArena* arena) {
+void mx_arena_reset(mx_arena* arena) {
 	arena->head = 0;
 }
 
-void mx_arena_free(MxArena* arena) {
+void mx_arena_free(mx_arena* arena) {
 	assert(arena->length > 0 && "[Mx]: Arena freed with size 0!");
 
 	arena->head = 0;
