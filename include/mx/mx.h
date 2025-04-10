@@ -42,4 +42,20 @@ typedef uint32_t mx_bool;
 #define MX_FALSE (uint32_t)0
 #define MX_TRUE (uint32_t)1
 
+#if defined(_WIN64)                       \
+ || defined(__x86_64__) || defined(__ppc64__) \
+ || defined(__aarch64__) || defined(__LP64__)
+    #define MX_SYSTEM_64_BIT 1
+#else
+    #define MX_SYSTEM_64_BIT 0
+#endif
+
+#include <stdint.h>
+
+#if MX_SYSTEM_64_BIT
+    typedef uint64_t mx_ptr_t;
+#else
+    typedef uint32_t mx_ptr_t;
+#endif
+
 #endif
