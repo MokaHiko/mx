@@ -20,6 +20,14 @@
     #endif
 #endif
 
+#ifndef MX_NO_DISCARD
+    #ifdef __clang__
+        #define MX_NO_DISCARD MX_NO_DISCARD 
+    #else
+        #define MX_NO_DISCARD
+    #endif
+#endif
+
 #ifdef MX_EXPORTS
 #ifdef MX_WIN32
 	#define MX_API __declspec(dllexport)

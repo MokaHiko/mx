@@ -7,9 +7,9 @@
 
 typedef void* mx_darray;
 
-MX_API [[nodiscard]] void* mx_darray_create(size_t element_size, mx_allocator* allocator);
+MX_API MX_NO_DISCARD void* mx_darray_create(size_t element_size, mx_allocator* allocator);
 
-MX_API [[nodiscard]] size_t mx_darray_count(const mx_darray* items);
+MX_API MX_NO_DISCARD size_t mx_darray_count(const mx_darray* items);
 
 MX_API void mx_darray_add(mx_darray* items, const void* data);
 

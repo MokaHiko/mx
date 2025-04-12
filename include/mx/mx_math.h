@@ -8,9 +8,9 @@
 #define MX_DEG_TO_RAD(deg) ((deg) * (MX_PI / (real_t)180.0))
 #define MX_RAD_TO_DEG(rad) ((rad) * ((real_t)180.0 / MX_PI))
 
-MX_API [[nodiscard]] real_t mx_tan(real_t radians);
+MX_API MX_NO_DISCARD real_t mx_tan(real_t radians);
 
-MX_API [[nodiscard]] real_t mx_pow(real_t base, real_t n);
+MX_API MX_NO_DISCARD real_t mx_pow(real_t base, real_t n);
 
 /**
  * @brief Clamps a floating-point value between a minimum and maximum.
@@ -20,7 +20,7 @@ MX_API [[nodiscard]] real_t mx_pow(real_t base, real_t n);
  * @param max The upper bound.
  * @return The clamped value: min if val < min, max if val > max, otherwise val.
  */
-MX_API [[nodiscard]] real_t mx_clampf(float val, float min, float max);
+MX_API MX_NO_DISCARD real_t mx_clampf(float val, float min, float max);
 
 /**
  * @brief Performs linear interpolation between a and b by factor t.
@@ -30,7 +30,7 @@ MX_API [[nodiscard]] real_t mx_clampf(float val, float min, float max);
  * @param t The interpolation factor (typically in [0, 1]).
  * @return The interpolated value: a + (b - a) * t.
  */
-MX_API [[nodiscard]] real_t mx_lerpf(float a, float b, float t);
+MX_API MX_NO_DISCARD real_t mx_lerpf(float a, float b, float t);
 
 /**
  * @brief Computes the dot product of two 3D vectors.
@@ -39,7 +39,7 @@ MX_API [[nodiscard]] real_t mx_lerpf(float a, float b, float t);
  * @param b The second input vector.
  * @return The scalar dot product (a · b).
  */
-MX_API [[nodiscard]] real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b);
+MX_API MX_NO_DISCARD real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b);
 
 /**
  * @brief Computes the squared length of a 3D vector.
@@ -47,7 +47,7 @@ MX_API [[nodiscard]] real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b);
  * @param a The input vector.
  * @return The squared length (||a||²), i.e., a.x² + a.y² + a.z².
  */
-MX_API [[nodiscard]] real_t mx_vec3_len_2(const mx_vec3 a);
+MX_API MX_NO_DISCARD real_t mx_vec3_len_2(const mx_vec3 a);
 
 /**
  * @brief Computes the length (magnitude) of a 3D vector.
@@ -55,7 +55,7 @@ MX_API [[nodiscard]] real_t mx_vec3_len_2(const mx_vec3 a);
  * @param a The input vector.
  * @return The length ||a|| = sqrt(a.x² + a.y² + a.z²).
  */
-MX_API [[nodiscard]] real_t mx_vec3_len(const mx_vec3 a);
+MX_API MX_NO_DISCARD real_t mx_vec3_len(const mx_vec3 a);
 
 /**
  * @brief Computes the cross product of two 3D vectors.
