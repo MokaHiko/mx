@@ -22,7 +22,7 @@
 
 #ifndef MX_NO_DISCARD
     #ifdef __clang__
-        #define MX_NO_DISCARD MX_NO_DISCARD 
+        #define MX_NO_DISCARD [[nodiscard]] 
     #else
         #define MX_NO_DISCARD
     #endif
@@ -65,5 +65,9 @@ typedef uint32_t mx_bool;
 #else
     typedef uint32_t mx_ptr_t;
 #endif
+
+#define MX_ARRAY_COUNT(arr)                                                                                  \
+    ((sizeof(arr) / sizeof((arr)[0])) +                                                                      \
+     0 * sizeof(char[1 - 2 * __builtin_types_compatible_p(__typeof__(arr), __typeof__(&(arr)[0]))]))
 
 #endif

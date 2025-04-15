@@ -8,7 +8,8 @@
 #define MX_ASSERT(cond, ...)                                                \
     do {                                                                    \
         if (!(cond)) {                                                      \
-            MX_LOG_ERROR("Assertion failed: %s; " __VA_ARGS__, #cond);      \
+            MX_LOG_ERROR("Assertion failed: %s", #cond);                    \
+            MX_LOG_ERROR("" __VA_ARGS__);                                   \
             assert(cond);                                                   \
         }                                                                   \
     } while (0)
