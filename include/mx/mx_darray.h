@@ -21,4 +21,6 @@ MX_API void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator* allocator);
 // TODO: Accept struct params
 #define MX_DARRAY_ADD(darray_ptr, element_ptr) mx_darray_add((void*)darray_ptr, element_ptr)
 
+#define MX_DARRAY_DESTROY(darray_ptr, allocator) (mx_darray_destroy((void*)darray_ptr, allocator))
+
 #endif

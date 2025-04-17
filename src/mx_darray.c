@@ -55,7 +55,9 @@ void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator* allocator) {
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
     mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
-    MX_ASSERT(info->capacity > 0);
+    if(info->capacity <= 0) {
+        return;
+    }
 
     info->head = 0;
     info->capacity = 0;

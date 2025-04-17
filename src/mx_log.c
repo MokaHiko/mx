@@ -40,8 +40,8 @@ void mx_log(mx_log_level level, const char* fmt, ...) {
 
     case MX_LOG_LEVEL_TRACE:
     default:
-        level_str = "LOG";
-        color     = MX_LOG_COLOR_INFO;
+        level_str = "TRACE";
+        color     = MX_LOG_COLOR_TRACE;
         break;
     }
 
