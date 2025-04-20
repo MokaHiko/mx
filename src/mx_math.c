@@ -1,8 +1,25 @@
 #include "mx/mx_math.h"
 
+#include "mx/mx_asserts.h"
 #include "mx/mx_math_types.h"
 
 #include <math.h>
+
+real_t mx_sin(real_t radians) {
+#ifndef MX_DOUBLE_PRECISION
+    return sinf(radians);
+#else
+    return sin(radians);
+#endif
+}
+
+real_t mx_cos(real_t radians) {
+#ifndef MX_DOUBLE_PRECISION
+    return cosf(radians);
+#else
+    return cos(radians);
+#endif
+}
 
 real_t mx_tan(real_t radians) {
 #ifndef MX_DOUBLE_PRECISION
@@ -33,6 +50,16 @@ real_t mx_clampf(float val, float min, float max) {
 }
 
 real_t mx_lerpf(float a, float b, float t) { return a * (1 - t) + b * t; }
+
+MX_API void mx_vec3_norm(const mx_vec3 a, mx_vec3 out) {
+    real_t len2 = mx_vec3_len_2(a);
+    MX_ASSERT(len2 > 0.0, "Cannot normalize vector with length 0.0");
+
+    real_t len = sqrt(len2);
+    out[0] = a[0] / len;
+    out[1] = a[1] / len;
+    out[2] = a[2] / len;
+}
 
 real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
 

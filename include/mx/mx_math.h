@@ -8,8 +8,9 @@
 #define MX_DEG_TO_RAD(deg) ((deg) * (MX_PI / (real_t)180.0))
 #define MX_RAD_TO_DEG(rad) ((rad) * ((real_t)180.0 / MX_PI))
 
+MX_API MX_NO_DISCARD real_t mx_sin(real_t radians);
+MX_API MX_NO_DISCARD real_t mx_cos(real_t radians);
 MX_API MX_NO_DISCARD real_t mx_tan(real_t radians);
-
 MX_API MX_NO_DISCARD real_t mx_pow(real_t base, real_t n);
 
 /**
@@ -31,6 +32,8 @@ MX_API MX_NO_DISCARD real_t mx_clampf(float val, float min, float max);
  * @return The interpolated value: a + (b - a) * t.
  */
 MX_API MX_NO_DISCARD real_t mx_lerpf(float a, float b, float t);
+
+MX_API void mx_vec3_norm(const mx_vec3 a, mx_vec3 out);
 
 /**
  * @brief Computes the dot product of two 3D vectors.

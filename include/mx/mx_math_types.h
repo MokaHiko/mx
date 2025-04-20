@@ -46,4 +46,11 @@ typedef real_t mx_vec4[4];
 typedef real_t mx_quat[4];
 #define MX_QUAT_IDENTITY (mx_vec4){1.0f, 0.0f, 0.0f, 0.0f}
 
+/**
+ * @brief Represents a 2D vector with three signed 32 bit int components.
+ *
+ */
+typedef int mx_ivec2[2];
+#define MX_IVEC2_ZERO {0, 0}
+
 #endif
