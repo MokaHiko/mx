@@ -63,7 +63,7 @@ typedef int mx_ivec2[2];
 typedef real_t mx_ivec3[3];
 #define MX_IVEC3_ZERO (mx_vec3){0, 0, 0}
 #else
-typedef real_t mx_ivec3[4];
+typedef int mx_ivec3[4];
 #define MX_IVEC3_ZERO {0, 0, 0, 0}
 #endif
 
