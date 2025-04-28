@@ -101,3 +101,34 @@ void mx_vec3_mul(const mx_vec3 a, const mx_vec3 b, mx_vec3 out) {
     out[1] = a[1] * b[1];
     out[2] = a[2] * b[2];
 }
+
+
+void mx_ivec3_scale(const mx_ivec3 a, int s, mx_ivec3 out) {
+    out[0] = a[0] * s;
+    out[1] = a[1] * s;
+    out[2] = a[2] * s;
+}
+
+void mx_ivec3_add(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+}
+
+void mx_ivec3_sub(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+}
+
+void mx_ivec3_sub_into(mx_ivec3 a, const mx_ivec3 b) {
+    a[0] = a[0] - b[0];
+    a[1] = a[1] - b[1];
+    a[2] = a[2] - b[2];
+}
+
+void mx_ivec3_mul(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
+}

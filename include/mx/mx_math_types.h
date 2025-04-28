@@ -53,4 +53,18 @@ typedef real_t mx_quat[4];
 typedef int mx_ivec2[2];
 #define MX_IVEC2_ZERO {0, 0}
 
+
+/**
+ * @brief Represents a 3D vector with three signed 32 bit int components.
+ *
+ * This vector is used for spatial coordinates, directions, and other 3D vector calculations.
+ */
+#ifndef MX_SIMD
+typedef real_t mx_ivec3[3];
+#define MX_IVEC3_ZERO (mx_vec3){0, 0, 0}
+#else
+typedef real_t mx_ivec3[4];
+#define MX_IVEC3_ZERO {0, 0, 0, 0}
+#endif
+
 #endif

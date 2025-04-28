@@ -106,4 +106,42 @@ MX_API void mx_vec3_sub_into(mx_vec3 a, const mx_vec3 b);
  */
 MX_API void mx_vec3_mul(const mx_vec3 a, const mx_vec3 b, mx_vec3 out);
 
+
+MX_API void mx_ivec3_scale(const mx_ivec3 a, int s, mx_ivec3 out);
+
+/**
+ * @brief Adds two 3D vectors.
+ *
+ * @param a The first input vector.
+ * @param b The second input vector.
+ * @param out The resulting vector (a + b).
+ */
+MX_API void mx_ivec3_add(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out);
+
+/**
+ * @brief Subtracts vector b from vector a.
+ *
+ * @param a The first input vector.
+ * @param b The vector to subtract.
+ * @param out The resulting vector (a - b).
+ */
+MX_API void mx_ivec3_sub(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out);
+
+/**
+ * @brief Subtracts vector b from vector a (in-place).
+ *
+ * @param a The vector to be modified (a -= b).
+ * @param b The vector to subtract.
+ */
+MX_API void mx_ivec3_sub_into(mx_ivec3 a, const mx_ivec3 b);
+
+/**
+ * @brief Multiplies two 3D vectors component-wise.
+ *
+ * @param a The first input vector.
+ * @param b The second input vector.
+ * @param out The resulting vector (a * b).
+ */
+MX_API void mx_ivec3_mul(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out);
+
 #endif
