@@ -50,12 +50,26 @@ void mx_darray_add(mx_darray* darray_ptr, const void* data) {
     *darray_ptr = (uint8_t*)info + sizeof(mx_darray_info);
 }
 
+void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
+    MX_ASSERT(darray_ptr != NULL);
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
+    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+
+    // Shitft all elements to left
+    mx_darray darray = (uint8_t*)info + sizeof(mx_darray_info);
+    void* free_pos = (uint8_t*)darray + idx * info->element_size;
+    memcpy(free_pos, free_pos + info->element_size, info->head - idx * info->element_size);
+
+    size_t new_head = info->head - info->element_size;
+    info->head = new_head;
+}
+
 void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator* allocator) {
     MX_ASSERT(darray_ptr != NULL);
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
     mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
-    if(info->capacity <= 0) {
+    if (info->capacity <= 0) {
         return;
     }
 
