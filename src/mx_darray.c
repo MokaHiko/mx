@@ -10,7 +10,7 @@ typedef struct mx_darray_info {
     size_t capacity;
 } mx_darray_info;
 
-void* mx_darray_create(size_t element_size, mx_allocator* allocator) {
+void* mx_darray_create(size_t element_size, mx_allocator_t* allocator) {
     if (allocator != NULL) {
     }
 
@@ -64,7 +64,7 @@ void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
     info->head = new_head;
 }
 
-void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator* allocator) {
+void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator_t* allocator) {
     MX_ASSERT(darray_ptr != NULL);
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
     mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));

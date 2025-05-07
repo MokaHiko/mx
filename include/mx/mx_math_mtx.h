@@ -2,7 +2,16 @@
 #define MX_MATH_MTX_H_
 
 #include "mx.h"
+
+#include "mx/mx_math.h"
 #include "mx_math_types.h"
+
+#define MX_RH
+#define MX_RH_ZO
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @brief Defines a 4x4 matrix (column-major order).
@@ -17,7 +26,23 @@
  *
  * @note Mx matrices are in column-major order.
  */
-typedef real_t mx_mat4[16];
+typedef union mx_mat4 {
+    real_t elements[4][4];
+    mx_vec4 columns[4];
+
+    real_t val[16];
+} mx_mat4;
+
+static inline mx_mat4 _mat4_diagonal(float diagonal) {
+    mx_mat4 result = {0};
+
+    result.elements[0][0] = diagonal;
+    result.elements[1][1] = diagonal;
+    result.elements[2][2] = diagonal;
+    result.elements[3][3] = diagonal;
+
+    return result;
+}
 
 /**
  * @brief Identity matrix for a 4x4 matrix (mx_mat4).
@@ -29,166 +54,255 @@ typedef real_t mx_mat4[16];
  * | 0, 0, 1, 0 |
  * | 0, 0, 0, 1 |
  */
-#define MX_MAT4_IDENTITY {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}
+#define MX_MAT4_IDENTITY (mx_mat4){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}
+
+MX_API MX_NO_DISCARD static inline mx_vec4 mx_mat_mul_vec4(mx_mat4 left, mx_vec4 right) {
+    mx_vec4 result;
+#ifdef MX_MATH__USE_SSE
+    Result.SSE = _mm_mul_ps(_mm_shuffle_ps(Left.SSE, Left.SSE, 0x00), Right.Columns[0].SSE);
+    Result.SSE = _mm_add_ps(
+        Result.SSE, _mm_mul_ps(_mm_shuffle_ps(Left.SSE, Left.SSE, 0x55), Right.Columns[1].SSE));
+    Result.SSE = _mm_add_ps(
+        Result.SSE, _mm_mul_ps(_mm_shuffle_ps(Left.SSE, Left.SSE, 0xaa), Right.Columns[2].SSE));
+    Result.SSE = _mm_add_ps(
+        Result.SSE, _mm_mul_ps(_mm_shuffle_ps(Left.SSE, Left.SSE, 0xff), Right.Columns[3].SSE));
+#else
+    result.x = right.elements[0] * left.columns[0].x;
+    result.y = right.elements[0] * left.columns[0].y;
+    result.z = right.elements[0] * left.columns[0].z;
+    result.w = right.elements[0] * left.columns[0].w;
+
+    result.x += right.elements[1] * left.columns[1].x;
+    result.y += right.elements[1] * left.columns[1].y;
+    result.z += right.elements[1] * left.columns[1].z;
+    result.w += right.elements[1] * left.columns[1].w;
+
+    result.x += right.elements[2] * left.columns[2].x;
+    result.y += right.elements[2] * left.columns[2].y;
+    result.z += right.elements[2] * left.columns[2].z;
+    result.w += right.elements[2] * left.columns[2].w;
+
+    result.x += right.elements[3] * left.columns[3].x;
+    result.y += right.elements[3] * left.columns[3].y;
+    result.z += right.elements[3] * left.columns[3].z;
+    result.w += right.elements[3] * left.columns[3].w;
+#endif
+
+    return result;
+}
+
+// SSE definess
+static inline mx_vec4 mx_linearcombinev4m4(mx_vec4 left, mx_mat4 right) {
+    mx_vec4 result;
+#ifdef mx_math__use_sse
+    result.sse = _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x00), right.columns[0].sse);
+    result.sse = _mm_add_ps(
+        result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x55), right.columns[1].sse));
+    result.sse = _mm_add_ps(
+        result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xaa), right.columns[2].sse));
+    result.sse = _mm_add_ps(
+        result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xff), right.columns[3].sse));
+#elif defined(handmade_math__use_neon)
+    result.neon = vmulq_laneq_f32(right.columns[0].neon, left.neon, 0);
+    result.neon = vfmaq_laneq_f32(result.neon, right.columns[1].neon, left.neon, 1);
+    result.neon = vfmaq_laneq_f32(result.neon, right.columns[2].neon, left.neon, 2);
+    result.neon = vfmaq_laneq_f32(result.neon, right.columns[3].neon, left.neon, 3);
+#else
+    result.x = left.elements[0] * right.columns[0].x;
+    result.y = left.elements[0] * right.columns[0].y;
+    result.z = left.elements[0] * right.columns[0].z;
+    result.w = left.elements[0] * right.columns[0].w;
+
+    result.x += left.elements[1] * right.columns[1].x;
+    result.y += left.elements[1] * right.columns[1].y;
+    result.z += left.elements[1] * right.columns[1].z;
+    result.w += left.elements[1] * right.columns[1].w;
+
+    result.x += left.elements[2] * right.columns[2].x;
+    result.y += left.elements[2] * right.columns[2].y;
+    result.z += left.elements[2] * right.columns[2].z;
+    result.w += left.elements[2] * right.columns[2].w;
+
+    result.x += left.elements[3] * right.columns[3].x;
+    result.y += left.elements[3] * right.columns[3].y;
+    result.z += left.elements[3] * right.columns[3].z;
+    result.w += left.elements[3] * right.columns[3].w;
+#endif
+
+    return result;
+}
 
 /**
  * @brief Multiplies two 4x4 matrices.
- *
- * This function multiplies two 4x4 matrices `a` and `b` and stores the result in `out`.
- * The mathematical form of the matrix multiplication is:
- *
- * out = a * b
- *
- * Where `a` and `b` are 4x4 matrices, and the resulting `out` matrix is calculated by:
- *
- * out[row, col] = a[row, 0] * b[0, col] + a[row, 1] * b[1, col] + a[row, 2] * b[2, col] + a[row, 3] * b[3,
- * col]
- *
- * @note If `out` is the same as either `a` or `b`, the result is undefined as the matrices are overwritten
- * during the operation.
- *
- * @param a The first matrix.
- * @param b The second matrix.
- * @param out The result of the multiplication. This cannot be the same as `a` or `b`.
+ * @return a * b
  */
-MX_API void mx_mat4_mul(const mx_mat4 a, const mx_mat4 b, mx_mat4 out);
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_mat4_mul(mx_mat4 left, mx_mat4 right) {
+    mx_mat4 result;
 
-// Main macro that handles multiple matrix arguments.
-#define MX_MAT4_MUL(result, ...) mx_mat4_mul_multiple_helper(result, __VA_ARGS__)
+    result.columns[0] = mx_linearcombinev4m4(right.columns[0], left);
+    result.columns[1] = mx_linearcombinev4m4(right.columns[1], left);
+    result.columns[2] = mx_linearcombinev4m4(right.columns[2], left);
+    result.columns[3] = mx_linearcombinev4m4(right.columns[3], left);
 
-/**
- * @brief Creates an orthogonal projection matrix.
- *
- * This function generates an orthographic projection matrix, which is used for orthogonal projection.
- * The mathematical form of the matrix is:
- *
- * out =
- * |  2/(r-l)   0           0           -(r+l)/(r-l) |
- * |  0          2/(t-b)    0           -(t+b)/(t-b) |
- * |  0          0          -2/(f-n)     -(f+n)/(f-n) |
- * |  0          0           0           1           |
- *
- * Where:
- * - `l` is the left clipping plane.
- * - `r` is the right clipping plane.
- * - `b` is the bottom clipping plane.
- * - `t` is the top clipping plane.
- * - `n` is the near clipping plane.
- * - `f` is the far clipping plane.
- *
- * @param l The left clipping plane.
- * @param r The right clipping plane.
- * @param b The bottom clipping plane.
- * @param t The top clipping plane.
- * @param n The near clipping plane.
- * @param f The far clipping plane.
- * @param out The resulting orthographic projection matrix.
- */
-MX_API void mx_ortho(real_t l, real_t r, real_t b, real_t t, real_t n, real_t f, mx_mat4 out);
+    return result;
+}
 
-/**
- * @brief Creates a perspective projection matrix.
- *
- * This function creates a perspective projection matrix used for perspective projection in 3D space.
- * The mathematical form of the matrix is:
- *
- * out =
- * | 1/(tan(fov/2) * aspect)   0           0                       0           |
- * | 0                         1/tan(fov/2) 0                       0           |
- * | 0                         0           (f+near)/(f-near)       -2*f*near/(f-near) |
- * | 0                         0           1                       0           |
- *
- * Where:
- * - `fov` is the field of view.
- * - `aspect` is the aspect ratio of the screen or view.
- * - `near` is the near clipping plane.
- * - `far` is the far clipping plane.
- *
- * @param fov The field of view (in radians).
- * @param aspect_ratio The aspect ratio of the screen.
- * @param near The near clipping plane.
- * @param far The far clipping plane.
- * @param out The resulting perspective projection matrix.
- */
-MX_API void mx_perspective(real_t fov, real_t aspect_ratio, real_t near, real_t far, mx_mat4 out);
+MX_API MX_NO_DISCARD static inline mx_mat4
+mx_ortho(float left, float right, float bottom, float top, float near, float far) {
+    mx_mat4 result = {0};
 
-/**
- * @brief Translates a matrix by a position vector.
- *
- * This function translates (moves) the matrix by the specified position vector. Mathematically, this is
- * represented as:
- *
- * out =
- * | 1    0    0    x |
- * | 0    1    0    y |
- * | 0    0    1    z |
- * | 0    0    0    1 |
- *
- * Where `x`, `y`, and `z` are the components of the position vector and `out` is the original matrix.
- *
- * @param position The translation vector (a 3D vector).
- * @param out The matrix to be translated.
- */
-MX_API void mx_translate(const mx_vec3 position, mx_mat4 out);
+    result.elements[0][0] = 2.0f / (right - left);
+    result.elements[1][1] = 2.0f / (top - bottom);
+    result.elements[2][2] = 1.0f / (near - far);
+    result.elements[3][3] = 1.0f;
 
-/**
- * @brief Scales a matrix by a scale vector.
- *
- * This function scales the matrix by the provided scale vector. Mathematically, this is represented as:
- *
- * out =
- * | sx   0    0    0 |
- * | 0    sy   0    0 |
- * | 0    0    sz   0 |
- * | 0    0    0    1 |
- *
- * Where `sx`, `sy`, and `sz` are the scale components for the X, Y, and Z axes respectively, and `out` is the
- * matrix to be scaled.
- *
- * @param scale The scale vector (a 3D vector).
- * @param out The matrix to be scaled.
- */
-MX_API void mx_scale(const mx_vec3 scale, mx_mat4 out);
+    result.elements[3][0] = (left + right) / (left - right);
+    result.elements[3][1] = (bottom + top) / (bottom - top);
+    result.elements[3][2] = (near) / (near - far);
 
-/**
- * @brief Creates a rotation matrix by Euler angles.
- *
- * This function creates a rotation matrix from the specified Euler angles in XYZ order. Mathematically, the
- * rotation matrix is composed of individual rotation matrices around each axis. The result is:
- *
- * out = Rz(angle_z) * Ry(angle_y) * Rx(angle_x)
- *
- * Where:
- * - Rx(angle_x) is the rotation matrix around the X-axis.
- * - Ry(angle_y) is the rotation matrix around the Y-axis.
- * - Rz(angle_z) is the rotation matrix around the Z-axis.
- *
- * The individual rotation matrices are:
- *
- * Rotation around X-axis:
- * Rx =
- * | 1   0          0           0 |
- * | 0   cos(angle_x)  -sin(angle_x)  0 |
- * | 0   sin(angle_x)   cos(angle_x)   0 |
- * | 0   0          0           1 |
- *
- * Rotation around Y-axis:
- * Ry =
- * | cos(angle_y)   0   sin(angle_y)   0 |
- * | 0              1   0              0 |
- * | -sin(angle_y)  0   cos(angle_y)   0 |
- * | 0              0   0              1 |
- *
- * Rotation around Z-axis:
- * Rz =
- * | cos(angle_z)   -sin(angle_z)  0   0 |
- * | sin(angle_z)   cos(angle_z)   0   0 |
- * | 0              0              1   0 |
- * | 0              0              0   1 |
- *
- * @param euler The Euler angles (in radians) for the rotation around X, Y, and Z axes.
- * @param out The resulting rotation matrix.
- */
-MX_API void mx_mat4_rotate_euler(const mx_vec3 euler, mx_mat4 out);
+    return result;
+}
+
+#ifdef MX_RH_ZO
+MX_API MX_NO_DISCARD static inline mx_mat4
+mx_perspective(real_t fov, real_t aspect_ratio, real_t near, real_t far) {
+    mx_mat4 result = {0};
+
+    // See https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+
+    float cotangent = 1.0f / mx_tan(fov / 2.0f);
+    result.elements[0][0] = cotangent / aspect_ratio;
+    result.elements[1][1] = cotangent;
+    result.elements[2][3] = -1.0f;
+
+    result.elements[2][2] = (far) / (near - far);
+    result.elements[3][2] = (near * far) / (near - far);
+
+    return result;
+}
+#endif
+
+static inline mx_mat4 _look_at(mx_vec3 f, mx_vec3 s, mx_vec3 u, mx_vec3 eye) {
+    mx_mat4 result;
+
+    result.elements[0][0] = s.x;
+    result.elements[0][1] = u.x;
+    result.elements[0][2] = -f.x;
+    result.elements[0][3] = 0.0f;
+
+    result.elements[1][0] = s.y;
+    result.elements[1][1] = u.y;
+    result.elements[1][2] = -f.y;
+    result.elements[1][3] = 0.0f;
+
+    result.elements[2][0] = s.z;
+    result.elements[2][1] = u.z;
+    result.elements[2][2] = -f.z;
+    result.elements[2][3] = 0.0f;
+
+    result.elements[3][0] = -mx_vec3_dot(s, eye);
+    result.elements[3][1] = -mx_vec3_dot(u, eye);
+    result.elements[3][2] = mx_vec3_dot(f, eye);
+    result.elements[3][3] = 1.0f;
+
+    return result;
+}
+
+#ifdef MX_RH
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_look_at(mx_vec3 eye, mx_vec3 center, mx_vec3 up) {
+    mx_vec3 f = mx_vec3_norm(mx_vec3_sub(center, eye));
+    mx_vec3 s = mx_vec3_norm(mx_vec3_cross(f, up));
+    mx_vec3 u = mx_vec3_cross(s, f);
+
+    return _look_at(f, s, u, eye);
+}
+#endif
+
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_translate(mx_vec3 position) {
+    mx_mat4 result = _mat4_diagonal(1.0);
+
+    result.elements[3][0] = position.x;
+    result.elements[3][1] = position.y;
+    result.elements[3][2] = position.z;
+
+    return result;
+}
+
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_scale(mx_vec3 scale) {
+    mx_mat4 result = _mat4_diagonal(1.0);
+
+    result.elements[0][0] *= scale.x;
+    result.elements[1][1] *= scale.y;
+    result.elements[2][2] *= scale.z;
+
+    return result;
+}
+
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_mat4_rotate_euler(real_t angle, mx_vec3 axis) {
+    mx_mat4 result = _mat4_diagonal(1.0);
+    axis = mx_vec3_norm(axis);
+
+    real_t sintheta = mx_sin(angle);
+    real_t costheta = mx_cos(angle);
+    real_t cosvalue = 1.0f - costheta;
+
+    result.elements[0][0] = (axis.x * axis.x * cosvalue) + costheta;
+    result.elements[0][1] = (axis.x * axis.y * cosvalue) + (axis.z * sintheta);
+    result.elements[0][2] = (axis.x * axis.z * cosvalue) - (axis.y * sintheta);
+
+    result.elements[1][0] = (axis.y * axis.x * cosvalue) - (axis.z * sintheta);
+    result.elements[1][1] = (axis.y * axis.y * cosvalue) + costheta;
+    result.elements[1][2] = (axis.y * axis.z * cosvalue) + (axis.x * sintheta);
+
+    result.elements[2][0] = (axis.z * axis.x * cosvalue) + (axis.y * sintheta);
+    result.elements[2][1] = (axis.z * axis.y * cosvalue) - (axis.x * sintheta);
+    result.elements[2][2] = (axis.z * axis.z * cosvalue) + costheta;
+
+    return result;
+}
+
+MX_API MX_NO_DISCARD static inline mx_mat4 mx_quat_mat4(mx_quat quat) {
+    mx_mat4 result;
+
+    mx_quat normalizedq = mx_quat_norm(quat);
+
+    float xx, yy, zz, xy, xz, yz, wx, wy, wz;
+
+    xx = normalizedq.x * normalizedq.x;
+    yy = normalizedq.y * normalizedq.y;
+    zz = normalizedq.z * normalizedq.z;
+    xy = normalizedq.x * normalizedq.y;
+    xz = normalizedq.x * normalizedq.z;
+    yz = normalizedq.y * normalizedq.z;
+    wx = normalizedq.w * normalizedq.x;
+    wy = normalizedq.w * normalizedq.y;
+    wz = normalizedq.w * normalizedq.z;
+
+    result.elements[0][0] = 1.0f - 2.0f * (yy + zz);
+    result.elements[0][1] = 2.0f * (xy + wz);
+    result.elements[0][2] = 2.0f * (xz - wy);
+    result.elements[0][3] = 0.0f;
+
+    result.elements[1][0] = 2.0f * (xy - wz);
+    result.elements[1][1] = 1.0f - 2.0f * (xx + zz);
+    result.elements[1][2] = 2.0f * (yz + wx);
+    result.elements[1][3] = 0.0f;
+
+    result.elements[2][0] = 2.0f * (xz + wy);
+    result.elements[2][1] = 2.0f * (yz - wx);
+    result.elements[2][2] = 1.0f - 2.0f * (xx + yy);
+    result.elements[2][3] = 0.0f;
+
+    result.elements[3][0] = 0.0f;
+    result.elements[3][1] = 0.0f;
+    result.elements[3][2] = 0.0f;
+    result.elements[3][3] = 1.0f;
+
+    return result;
+}
+
+#ifdef __cplusplus
+}
+#endif /*MX_MATH_MTX_H */
 
 #endif

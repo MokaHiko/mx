@@ -26,8 +26,27 @@ typedef real_t mx_vec2[2];
 typedef real_t mx_vec3[3];
 #define MX_VEC3_ZERO (mx_vec3){0.0f, 0.0f, 0.0f}
 #else
-typedef real_t mx_vec3[4];
-#define MX_VEC3_ZERO {0.0f, 0.0f, 0.0f, 0.0f}
+typedef union mx_vec3 {
+    real_t elements[3];
+
+    struct {
+        real_t x, y, z;
+    };
+
+    struct {
+        real_t r, g, b;
+    };
+
+    struct {
+        real_t xy;
+        real_t _ignored;
+    };
+} mx_vec3;
+
+#define MX_VEC3_ZERO (mx_vec3){0.0, 0.0, 0.0}
+#define MX_VEC3_ONE  (mx_vec3){1.0, 1.0, 1.0}
+#define MX_VEC3_UP   (mx_vec3){0.0, 1.0, 0.0}
+
 #endif
 
 /**
@@ -35,16 +54,23 @@ typedef real_t mx_vec3[4];
  *
  * This vector is typically used for homogeneous coordinates or other 4D vector operations.
  */
-typedef real_t mx_vec4[4];
-#define MX_VEC4_ZERO (mx_vec4){0.0f, 0.0f, 0.0f, 0.0f}
+typedef union mx_vec4 {
+    real_t elements[4];
 
-/**
- * @brief Represents a quaternion with four real_t components.
- *
- * This quaternion is stored in the order (w, x, y, z).
- */
-typedef real_t mx_quat[4];
-#define MX_QUAT_IDENTITY (mx_vec4){1.0f, 0.0f, 0.0f, 0.0f}
+    struct {
+        real_t x, y, z, w;
+    };
+
+    struct {
+        real_t r, g, b, a;
+    };
+
+    struct {
+        mx_vec3 xyz;
+        real_t _ignored;
+    };
+} mx_vec4;
+#define MX_VEC4_ZERO (mx_vec4){0.0f, 0.0f, 0.0f, 0.0f}
 
 /**
  * @brief Represents a 2D vector with three signed 32 bit int components.
@@ -52,7 +78,6 @@ typedef real_t mx_quat[4];
  */
 typedef int mx_ivec2[2];
 #define MX_IVEC2_ZERO {0, 0}
-
 
 /**
  * @brief Represents a 3D vector with three signed 32 bit int components.
@@ -63,8 +88,35 @@ typedef int mx_ivec2[2];
 typedef real_t mx_ivec3[3];
 #define MX_IVEC3_ZERO (mx_vec3){0, 0, 0}
 #else
-typedef int mx_ivec3[4];
+typedef union mx_ivec3 {
+    int elements[4];
+
+    struct {
+        int x, y, z;
+    };
+
+    struct {
+        int xy;
+        int _ignored;
+    };
+} mx_ivec3;
 #define MX_IVEC3_ZERO {0, 0, 0, 0}
 #endif
+
+typedef union mx_quat {
+    float elements[4];
+
+    struct {
+        union {
+            mx_vec3 xyz;
+            struct {
+                float x, y, z;
+            };
+        };
+
+        float w;
+    };
+} mx_quat;
+#define MX_QUAT_IDENTITY {0, 0, 0, 1}
 
 #endif

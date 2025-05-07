@@ -37,7 +37,7 @@ real_t mx_pow(real_t base, real_t n) {
 #endif
 }
 
-real_t mx_clampf(float val, float min, float max) {
+real_t mx_clamp(real_t val, real_t min, real_t max) {
     if (val < min) {
         return min;
     }
@@ -51,84 +51,46 @@ real_t mx_clampf(float val, float min, float max) {
 
 real_t mx_lerpf(float a, float b, float t) { return a * (1 - t) + b * t; }
 
-MX_API void mx_vec3_norm(const mx_vec3 a, mx_vec3 out) {
+mx_vec3 mx_vec3_norm(mx_vec3 a) {
     real_t len2 = mx_vec3_len_2(a);
     MX_ASSERT(len2 > 0.0, "Cannot normalize vector with length 0.0");
 
     real_t len = sqrt(len2);
-    out[0] = a[0] / len;
-    out[1] = a[1] / len;
-    out[2] = a[2] / len;
+    return (mx_vec3){a.x / len, a.y / len, a.z / len};
 }
 
-real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+real_t mx_vec3_dot(const mx_vec3 a, const mx_vec3 b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 
 real_t mx_vec3_len_2(const mx_vec3 a) { return mx_vec3_dot(a, a); }
 real_t mx_vec3_len(const mx_vec3 a) { return sqrt(mx_vec3_len_2(a)); }
 
-void mx_vec3_cross(const mx_vec3 a, const mx_vec3 b, mx_vec3 out) {
-    out[0] = (a[1] * b[2]) - (a[2] * b[1]);
-    out[1] = (a[2] * b[0]) - (a[0] * b[0]);
-    out[2] = (a[0] * b[1]) - (a[1] * b[0]);
+mx_vec3 mx_vec3_cross(mx_vec3 a, mx_vec3 b) {
+    return (mx_vec3){
+        (a.y * b.z) - (a.z * b.y),
+        (a.z * b.x) - (a.x * b.z),
+        (a.x * b.y) - (a.y * b.x),
+    };
 }
 
-void mx_vec3_scale(const mx_vec3 a, float s, mx_vec3 out) {
-    out[0] = a[0] * s;
-    out[1] = a[1] * s;
-    out[2] = a[2] * s;
+mx_vec3 mx_vec3_scale(mx_vec3 a, float s) { return (mx_vec3){a.x * s, a.y * s, a.z * s}; }
+
+mx_vec3 mx_vec3_add(mx_vec3 a, mx_vec3 b) { return (mx_vec3){a.x + b.x, a.y + b.y, a.z + b.z}; }
+
+mx_vec3 mx_vec3_sub(mx_vec3 a, mx_vec3 b) { return (mx_vec3){a.x - b.x, a.y - b.y, a.z - b.z}; }
+
+mx_vec3 mx_vec3_mul(mx_vec3 a, mx_vec3 b) { return (mx_vec3){a.x * b.x, a.y * b.y, a.z * b.z}; }
+
+mx_ivec3 mx_ivec3_scale(mx_ivec3 a, int s) { return (mx_ivec3){a.x * s, a.y * s, a.z * s}; }
+
+mx_ivec3 mx_ivec3_add(mx_ivec3 a, mx_ivec3 b) {
+    return (mx_ivec3){a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
-void mx_vec3_add(const mx_vec3 a, const mx_vec3 b, mx_vec3 out) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
+mx_ivec3 mx_ivec3_sub(mx_ivec3 a, mx_ivec3 b) {
+    return (mx_ivec3){a.x - b.x, a.y - b.y, a.z - b.z};
 }
 
-void mx_vec3_sub(const mx_vec3 a, const mx_vec3 b, mx_vec3 out) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
+mx_ivec3 mx_ivec3_mul(mx_ivec3 a, mx_ivec3 b) {
+    return (mx_ivec3){a.x * b.x, a.y * b.y, a.z * b.z};
 }
 
-void mx_vec3_sub_into(mx_vec3 a, const mx_vec3 b) {
-    a[0] = a[0] - b[0];
-    a[1] = a[1] - b[1];
-    a[2] = a[2] - b[2];
-}
-
-void mx_vec3_mul(const mx_vec3 a, const mx_vec3 b, mx_vec3 out) {
-    out[0] = a[0] * b[0];
-    out[1] = a[1] * b[1];
-    out[2] = a[2] * b[2];
-}
-
-
-void mx_ivec3_scale(const mx_ivec3 a, int s, mx_ivec3 out) {
-    out[0] = a[0] * s;
-    out[1] = a[1] * s;
-    out[2] = a[2] * s;
-}
-
-void mx_ivec3_add(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
-}
-
-void mx_ivec3_sub(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
-}
-
-void mx_ivec3_sub_into(mx_ivec3 a, const mx_ivec3 b) {
-    a[0] = a[0] - b[0];
-    a[1] = a[1] - b[1];
-    a[2] = a[2] - b[2];
-}
-
-void mx_ivec3_mul(const mx_ivec3 a, const mx_ivec3 b, mx_ivec3 out) {
-    out[0] = a[0] * b[0];
-    out[1] = a[1] * b[1];
-    out[2] = a[2] * b[2];
-}

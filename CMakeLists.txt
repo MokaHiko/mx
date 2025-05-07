@@ -28,6 +28,10 @@ else()
     message(WARNING "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
 endif()
 
+if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    target_compile_definitions(mx PUBLIC MX_CLANG=1)
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(mx PUBLIC MX_DEBUG=1)
 else()
