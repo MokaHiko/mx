@@ -1,16 +1,21 @@
 #include <mx/mx_memory.h>
 
-#include "mx/mx_log.h"
 #include "mx/mx_asserts.h"
+#include "mx/mx_log.h"
 
 #include <assert.h>
 #include <stdlib.h>
 
+mx_allocator_t mx_default_allocator() {
+    return (mx_allocator_t){
+        .alloc = malloc,
+        .free = free,
+    };
+};
+
 static mx_arena default_allocator;
 
-static void* mx_default_alloc(size_t size) {
-    return mx_arena_push(&default_allocator, size);
-}
+static void* mx_default_alloc(size_t size) { return mx_arena_push(&default_allocator, size); }
 
 static void mx_default_free(void* data) {}
 
@@ -24,13 +29,9 @@ mx_allocator_t mx_make_allocator(mx_arena arena) {
     return (mx_allocator_t){.alloc = mx_default_alloc, .free = mx_default_free};
 };
 
-void mx_allocator_reset(mx_allocator_t allocator) {
-    mx_arena_reset(&default_allocator);
-}
+void mx_allocator_reset(mx_allocator_t allocator) { mx_arena_reset(&default_allocator); }
 
-void mx_free_allocator(mx_allocator_t allocator) {
-    default_allocator = (mx_arena){0};
-};
+void mx_free_allocator(mx_allocator_t allocator) { default_allocator = (mx_arena){0}; };
 
 void* mx_alloc(size_t len, mx_memory_alloc_flag flags) { return malloc(len); }
 void* mx_realloc(void* data, size_t len) { return realloc(data, len); }

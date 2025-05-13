@@ -5,7 +5,7 @@
 #include "mx/mx_string.h"
 
 typedef struct MX_API mx_path {
-    const mx_string path;
+    mx_strv path;
 } mx_path;
 
 /*@returns MX_SUCCESS if file exists.*/

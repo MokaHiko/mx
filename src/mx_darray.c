@@ -77,3 +77,29 @@ void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator_t* allocator) {
     info->capacity = 0;
     mx_free(info);
 };
+
+void* mx_darray_push_impl(mx_darray* darray_ptr, size_t component_size, void* data) {
+    MX_ASSERT(darray_ptr != NULL);
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
+    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+
+    size_t new_head = info->head + info->element_size;
+    if (new_head > info->capacity) {
+        size_t new_capacity = info->capacity > 0 ? info->capacity * 2 : info->element_size;
+
+        info = mx_realloc(info, sizeof(mx_darray_info) + new_capacity);
+        info->capacity = new_capacity;
+    }
+
+    mx_darray darray = (uint8_t*)info + sizeof(mx_darray_info);
+    if (data != NULL) {
+        memcpy((uint8_t*)darray + info->head, data, info->element_size);
+    } else {
+        memset((uint8_t*)darray + info->head, 0, info->element_size);
+    }
+
+    info->head = new_head;
+    *darray_ptr = (uint8_t*)info + sizeof(mx_darray_info);
+
+    return (uint8_t*)darray + info->head;
+}

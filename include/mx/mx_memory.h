@@ -21,6 +21,9 @@ typedef struct MX_API mx_allocator_t {
     void* user_data;
 } mx_allocator_t;
 
+extern mx_allocator_t MX_DEFAULT_ALLOCATOR;
+MX_API MX_NO_DISCARD mx_allocator_t mx_default_allocator();
+
 // @brief created a single threaded default allocator
 MX_API MX_NO_DISCARD mx_allocator_t mx_make_allocator(mx_arena arena);
 MX_API void mx_allocator_reset(mx_allocator_t arena);

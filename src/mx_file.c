@@ -3,48 +3,48 @@
 #include <string.h>
 
 int mx_read_file(const char* path, size_t* size, void* buffer) {
-	FILE* fptr;
-	fptr = fopen(path, "rb");
+    FILE* fptr;
+    fptr = fopen(path, "rb");
 
-	if(fptr == NULL) {
-		return -1;
-	}
+    if (fptr == NULL) {
+        return -1;
+    }
 
-	fseek(fptr, 0, SEEK_END);
-	*size = ftell(fptr);
+    fseek(fptr, 0, SEEK_END);
+    *size = ftell(fptr);
 
-	if(buffer == NULL) {
-		fclose(fptr);
-		return MX_SUCCESS;
-	}
+    if (buffer == NULL) {
+        fclose(fptr);
+        return MX_SUCCESS;
+    }
 
-	rewind(fptr);
-	fread(buffer, 1, *size, fptr);
+    rewind(fptr);
+    fread(buffer, 1, *size, fptr);
 
-	fclose(fptr);
-	return MX_SUCCESS;
+    fclose(fptr);
+    return MX_SUCCESS;
 }
 
 typedef struct mx_string_slice {
-	mx_string string;
-	uint32_t offset;
-	uint32_t length;
+    const char* string;
+    uint32_t offset;
+    uint32_t length;
 } mx_string_slice;
 
-void get_directory(mx_string path, mx_string_slice* dir) {
-	const size_t path_length = strlen(path);
-	const char* file_name = strrchr(path, '/');
+void get_directory(const char* path, mx_string_slice* dir) {
+    const size_t path_length = strlen(path);
+    const char* file_name = strrchr(path, '/');
 
-	dir->string = path;
-	dir->length = file_name - path;
-	dir->offset = 0;
+    dir->string = path;
+    dir->length = file_name - path;
+    dir->offset = 0;
 }
 
-void get_file(mx_string path, mx_string_slice* file) {
-	mx_string_slice dir;
-	get_directory(path, &dir);
+void get_file(const char* path, mx_string_slice* file) {
+    mx_string_slice dir;
+    get_directory(path, &dir);
 
-	file->string = path;
-	file->length = strlen(path) - dir.length;
-	file->offset = dir.length;
+    file->string = path;
+    file->length = strlen(path) - dir.length;
+    file->offset = dir.length;
 }

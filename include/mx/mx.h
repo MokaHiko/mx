@@ -70,4 +70,10 @@ typedef uint32_t mx_bool;
     ((sizeof(arr) / sizeof((arr)[0])) +                                                                      \
      0 * sizeof(char[1 - 2 * __builtin_types_compatible_p(__typeof__(arr), __typeof__(&(arr)[0]))]))
 
+#define mx_concat2(a, b) a##b
+#define mx_concat(a, b)  mx_concat2(a, b)
+
+// Create a unique name with line number
+#define mx_macro_var_line(name) concat(name, __LINE__)
+
 #endif
