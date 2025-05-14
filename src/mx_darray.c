@@ -58,7 +58,7 @@ void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
     // Shitft all elements to left
     mx_darray darray = (uint8_t*)info + sizeof(mx_darray_info);
     void* free_pos = (uint8_t*)darray + idx * info->element_size;
-    memcpy(free_pos, free_pos + info->element_size, info->head - idx * info->element_size);
+    memcpy(free_pos, (uint8_t*)free_pos + info->element_size, info->head - idx * info->element_size);
 
     size_t new_head = info->head - info->element_size;
     info->head = new_head;

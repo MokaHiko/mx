@@ -117,6 +117,6 @@ typedef union mx_quat {
         float w;
     };
 } mx_quat;
-#define MX_QUAT_IDENTITY {0, 0, 0, 1}
+#define MX_QUAT_IDENTITY (mx_quat){0, 0, 0, 1}
 
 #endif

@@ -148,24 +148,24 @@ MX_API MX_NO_DISCARD static inline mx_mat4 mx_mat4_mul(mx_mat4 left, mx_mat4 rig
 }
 
 MX_API MX_NO_DISCARD static inline mx_mat4
-mx_ortho(float left, float right, float bottom, float top, float near, float far) {
+mx_ortho(float left, float right, float bottom, float top, float n, float f) {
     mx_mat4 result = {0};
 
     result.elements[0][0] = 2.0f / (right - left);
     result.elements[1][1] = 2.0f / (top - bottom);
-    result.elements[2][2] = 1.0f / (near - far);
+    result.elements[2][2] = 1.0f / (n - f);
     result.elements[3][3] = 1.0f;
 
     result.elements[3][0] = (left + right) / (left - right);
     result.elements[3][1] = (bottom + top) / (bottom - top);
-    result.elements[3][2] = (near) / (near - far);
+    result.elements[3][2] = (n) / (n - f);
 
     return result;
 }
 
 #ifdef MX_RH_ZO
 MX_API MX_NO_DISCARD static inline mx_mat4
-mx_perspective(real_t fov, real_t aspect_ratio, real_t near, real_t far) {
+mx_perspective(real_t fov, real_t aspect_ratio, real_t n, real_t f) {
     mx_mat4 result = {0};
 
     // See https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
@@ -175,8 +175,8 @@ mx_perspective(real_t fov, real_t aspect_ratio, real_t near, real_t far) {
     result.elements[1][1] = cotangent;
     result.elements[2][3] = -1.0f;
 
-    result.elements[2][2] = (far) / (near - far);
-    result.elements[3][2] = (near * far) / (near - far);
+    result.elements[2][2] = (f) / (n - f);
+    result.elements[3][2] = (n * f) / (n - f);
 
     return result;
 }
@@ -303,6 +303,6 @@ MX_API MX_NO_DISCARD static inline mx_mat4 mx_quat_mat4(mx_quat quat) {
 
 #ifdef __cplusplus
 }
-#endif /*MX_MATH_MTX_H */
-
 #endif
+
+#endif // MX_MATH_MTX_H
