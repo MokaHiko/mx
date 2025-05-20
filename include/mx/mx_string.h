@@ -4,22 +4,41 @@
 #include "mx/mx.h"
 #include "mx/mx_memory.h"
 
-enum { MX_STRV_WHOLE_SIZE = 0 };
-
-typedef struct MX_API mx_str {
-    uint8_t* data;
-    size_t len;
-    size_t capacity;
-    mx_allocator_t allocator;
-} mx_str;
-
-MX_API MX_NO_DISCARD mx_str mx_str_create(const char* str, mx_allocator_t allocator);
+enum { MX_STR_WHOLE_SIZE = 0 };
 
 typedef struct MX_API mx_strv {
     const char* c_str;
-    size_t len; // If 0 then assumed entire length
+    size_t len;
 } mx_strv;
 
-MX_API MX_NO_DISCARD mx_strv mx_strv_create(const char* str);
+typedef struct MX_API mx_str {
+    union {
+        mx_strv strv;
+
+        struct {
+            char* data;
+            size_t len;
+        };
+    };
+
+    size_t capacity;
+} mx_str;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+MX_API MX_NO_DISCARD mx_str mx_str_allocate(size_t len, mx_allocator_t allocator);
+MX_API MX_NO_DISCARD mx_str mx_str_create(const char* str, mx_allocator_t allocator);
+
+MX_API void mx_str_destroy(mx_str string, mx_allocator_t allocator);
+
+MX_API MX_NO_DISCARD mx_str mx_strcat(mx_str left, mx_str right, mx_allocator_t allocator);
+MX_API MX_NO_DISCARD mx_str mx_strcopy(mx_str string, mx_allocator_t allocator);
+MX_API MX_NO_DISCARD mx_str mx_fmt(mx_allocator_t allocator, mx_strv fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

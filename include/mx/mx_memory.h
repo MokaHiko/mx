@@ -16,28 +16,55 @@ typedef struct MX_API mx_arena {
 } mx_arena;
 
 typedef struct MX_API mx_allocator_t {
-    void* (*alloc)(size_t size);
-    void (*free)(void* ptr);
+    void* (*alloc)(void* user_ptr, size_t size);
+    void* (*realloc)(void* user_ptr, void* ptr, size_t size);
+    void (*free)(void* user_ptr, void* ptr);
     void* user_data;
 } mx_allocator_t;
 
-extern mx_allocator_t MX_DEFAULT_ALLOCATOR;
+#define mx_alloc(allocator, len)        allocator.alloc(allocator.user_data, len)
+#define mx_realloc(allocator, ptr, len) allocator.realloc(allocator.user_data, ptr, len)
+#define mx_free(allocator, ptr)         allocator.free(allocator.user_data, ptr)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// @brief default arena allocator
+MX_API inline static void* mx_arena_allocate(void* user_data, size_t len) {
+    //assert(len > 0 && "[Mx]: Arena push with size 0!");
+    mx_arena* arena = (mx_arena*)user_data;
+
+#ifdef MX_DEBUG
+    if (arena->head + len > arena->len) {
+        //MX_LOG_ERROR("Arena requested %zu but has remaining %zu\n", len, arena->len - arena->head);
+    }
+#endif
+
+    //assert(arena->head + len <= arena->len && "[Mx]: Arena push overflow!");
+    void* alloc = arena->data + arena->head;
+    arena->head += len;
+
+    return alloc;
+};
+
+
+// @brief Returns an allocator using malloc and free
 MX_API MX_NO_DISCARD mx_allocator_t mx_default_allocator();
 
 // @brief created a single threaded default allocator
-MX_API MX_NO_DISCARD mx_allocator_t mx_make_allocator(mx_arena arena);
-MX_API void mx_allocator_reset(mx_allocator_t arena);
-MX_API void mx_free_allocator(mx_allocator_t allocator);
+MX_API MX_NO_DISCARD mx_allocator_t mx_allocator_create(mx_arena* arena);
 
-MX_API void* mx_alloc(size_t len, mx_memory_alloc_flag flags);
+#define mx_scoped_allocator(bytes)                                                                 \
+    uint8_t __mx_scoped_temp_buffer[(bytes)];                                                      \
+    mx_arena __mx_temp_arena = {.data = __mx_scoped_temp_buffer, .len = bytes};                    \
+    mx_allocator_t
 
-MX_API void* mx_realloc(void* data, size_t len);
+#define mx_scoped_allocator_create()                                                               \
+    (mx_allocator_t) { .alloc = &mx_arena_allocate, .user_data = &__mx_temp_arena }
 
-MX_API void mx_free(void* data);
-
-MX_API mx_arena mx_arena_alloc(size_t size);
-MX_API MX_NO_DISCARD void* mx_arena_push(mx_arena* arena, size_t size);
-MX_API void mx_arena_reset(mx_arena* arena);
-MX_API void mx_arena_free(mx_arena* arena);
+#ifdef __cplusplus
+}
+#endif
 
 #endif
