@@ -51,6 +51,7 @@ MX_API inline static void* mx_arena_allocate(void* user_data, size_t len) {
 
 // @brief Returns an allocator using malloc and free
 MX_API MX_NO_DISCARD mx_allocator_t mx_default_allocator();
+#define MX_DEFAULT_ALLOCATOR mx_default_allocator()
 
 // @brief created a single threaded default allocator
 MX_API MX_NO_DISCARD mx_allocator_t mx_allocator_create(mx_arena* arena);

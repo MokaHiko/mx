@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static size_t str_len(mx_str string) {
+size_t mx_strlen(mx_str string) {
     if (string.len == MX_STR_WHOLE_SIZE) {
         string.len = strlen(string.data) + 1;
     }
@@ -72,8 +72,8 @@ mx_str mx_fmt(mx_allocator_t allocator, mx_strv fmt, ...) {
 }
 
 mx_str mx_strcat(mx_str left, mx_str right, mx_allocator_t allocator) {
-    left.len = str_len(left);
-    right.len = str_len(right);
+    left.len = mx_strlen(left);
+    right.len = mx_strlen(right);
 
     if (left.len <= 0) {
         MX_LOG_WARN("Attempting to concatonate with left empty string");
@@ -85,37 +85,14 @@ mx_str mx_strcat(mx_str left, mx_str right, mx_allocator_t allocator) {
     memcpy(str_buff.data, left.data, left.len - 1);
     memcpy(str_buff.data + left.len - 1, right.data, right.len);
 
-    /*if ((alloc_options.flags & MX_STR_CAT_FREE_LEFT) == MX_STR_CAT_FREE_LEFT) {*/
-    /*    mx_str_destroy(left, left.allocator);*/
-    /*};*/
-    /**/
-    /*if ((alloc_options.flags & MX_STR_CAT_FREE_RIGHT) == MX_STR_CAT_FREE_RIGHT) {*/
-    /*    mx_str_destroy(right, right.allocator);*/
-    /*};*/
-
     return str_buff;
 };
 
 mx_str mx_strcopy(mx_str string, mx_allocator_t allocator) {
-    string.len = str_len(string);
+    string.len = mx_strlen(string);
 
     mx_str str_buff = mx_str_allocate(string.len, allocator);
     memcpy(str_buff.data, string.data, string.len);
 
     return str_buff;
 };
-
-/*mx_str mx_strv_cat(mx_str left, mx_strv right, mx_allocator_t allocator) {*/
-/*    left.len = str_len(left);*/
-/*    right.len = str_len(right);*/
-/**/
-/*    mx_str str_buff = str_allocate(left.len + right.len - 1, allocator);*/
-/**/
-/*    memcpy(str_buff.data, left.data, left.len - 1);*/
-/*    memcpy(str_buff.data + left.len - 1, right.c_str, right.len);*/
-/**/
-/*    /*if ((alloc_options.flags & MX_STR_CAT_FREE_LEFT) == MX_STR_CAT_FREE_LEFT) {*/
-/*    /*    mx_str_destroy(left, left.allocator);
-/*   };
-/*    return str_buff;
-/*};*/

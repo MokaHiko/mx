@@ -7,7 +7,7 @@
 // ANSI color codes for terminal output
 const char* MX_LOG_COLOR_DEBUG = "\033[0;37m";   // White/Gray
 const char* MX_LOG_COLOR_INFO = "\033[0;36m";    // Cyan
-const char* MX_LOG_COLOR_TRACE = "\033[0;37m";   // White/Gray
+const char* MX_LOG_COLOR_TRACE = "\033[1;34m"; // Bright blue
 const char* MX_LOG_COLOR_WARN = "\033[0;33m";    // Yellow
 const char* MX_LOG_COLOR_ERROR = "\033[0;31m";   // Red
 const char* MX_LOG_COLOR_SUCCESS = "\033[0;32m"; // Green

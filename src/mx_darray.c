@@ -53,11 +53,16 @@ void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
     mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
+    MX_ASSERT(idx < info->head / info->element_size,
+              "[mx_darray] Attempting to remove element outside bounds.");
+
     // Shitft all elements to left
     mx_darray darray = (uint8_t*)info + sizeof(mx_darray_info);
-    void* free_pos = (uint8_t*)darray + idx * info->element_size;
-    memcpy(
-        free_pos, (uint8_t*)free_pos + info->element_size, info->head - idx * info->element_size);
+    void* remove_pos = darray + idx * info->element_size;
+    size_t remaining_bytes = info->head - (idx + 1) * info->element_size;
+    if (remaining_bytes > 0) {
+        memcpy(remove_pos, (uint8_t*)remove_pos + info->element_size, remaining_bytes);
+    }
 
     size_t new_head = info->head - info->element_size;
     info->head = new_head;
