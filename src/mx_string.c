@@ -59,7 +59,7 @@ mx_str mx_fmt(mx_allocator_t allocator, mx_strv fmt, ...) {
     va_end(args);
 
     if (length < 0)
-        return (mx_str){};
+        return (mx_str){0};
 
     // Allocate buffer
     mx_str str_buff = mx_str_allocate(length + 1, allocator);

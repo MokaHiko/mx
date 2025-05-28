@@ -3,9 +3,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-typedef struct memory_profiler {
-} memory_profiler;
-
 static void* platform_alloc(void* _, size_t size) { return malloc(size); }
 
 static void* platform_realloc(void* _, void* ptr, size_t size) { return realloc(ptr, size); }
