@@ -13,24 +13,33 @@ typedef struct mx_darray_info {
 
 void* mx_darray_create(size_t element_size, mx_allocator_t allocator) {
     mx_darray_info* darray_info = mx_alloc(allocator, sizeof(mx_darray_info));
-    *darray_info = (mx_darray_info){.head = 0, .element_size = element_size, .capacity = 0};
+    *darray_info = (mx_darray_info){
+        .head = 0,
+        .element_size = element_size,
+        .capacity = 0,
+        .allocator = allocator,
+    };
 
     return (uint8_t*)darray_info + sizeof(mx_darray_info);
 };
 
 size_t mx_darray_count(const mx_darray* items) {
-    struct mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*items) - sizeof(mx_darray_info));
+    struct mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*items) - sizeof(mx_darray_info));
     return info->head / info->element_size;
 }
 
 void mx_darray_add(mx_darray* darray_ptr, const void* data) {
     MX_ASSERT(darray_ptr != NULL);
-    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
-    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=
+              NULL);
+    mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
     size_t new_head = info->head + info->element_size;
     if (new_head > info->capacity) {
-        size_t new_capacity = info->capacity > 0 ? info->capacity * 2 : info->element_size;
+        size_t new_capacity =
+            info->capacity > 0 ? info->capacity * 2 : info->element_size;
 
         info = mx_realloc(info->allocator, info, sizeof(mx_darray_info) + new_capacity);
         info->capacity = new_capacity;
@@ -50,8 +59,10 @@ void mx_darray_add(mx_darray* darray_ptr, const void* data) {
 
 void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
     MX_ASSERT(darray_ptr != NULL);
-    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
-    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=
+              NULL);
+    mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
     MX_ASSERT(idx < info->head / info->element_size,
               "[mx_darray] Attempting to remove element outside bounds.");
@@ -70,8 +81,10 @@ void mx_darray_remove_at(mx_darray* darray_ptr, uint32_t idx) {
 
 void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator_t allocator) {
     MX_ASSERT(darray_ptr != NULL);
-    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
-    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=
+              NULL);
+    mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
     if (info->capacity <= 0) {
         return;
@@ -84,12 +97,15 @@ void mx_darray_destroy(mx_darray* darray_ptr, mx_allocator_t allocator) {
 
 void* mx_darray_push_impl(mx_darray* darray_ptr, size_t component_size, void* data) {
     MX_ASSERT(darray_ptr != NULL);
-    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) != NULL);
-    mx_darray_info* info = (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+    MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=
+              NULL);
+    mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
 
     size_t new_head = info->head + info->element_size;
     if (new_head > info->capacity) {
-        size_t new_capacity = info->capacity > 0 ? info->capacity * 2 : info->element_size;
+        size_t new_capacity =
+            info->capacity > 0 ? info->capacity * 2 : info->element_size;
 
         info = mx_realloc(info->allocator, info, sizeof(mx_darray_info) + new_capacity);
         info->capacity = new_capacity;
