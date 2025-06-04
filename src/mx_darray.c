@@ -29,6 +29,28 @@ size_t mx_darray_count(const mx_darray* items) {
     return info->head / info->element_size;
 }
 
+void mx_darray_resize_impl(mx_darray* darray_ptr, size_t elem_count) {
+    struct mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info));
+
+    size_t required_capacity = elem_count * info->element_size;
+
+    // Do not change capacity if smaller
+    if (required_capacity > info->capacity) {
+        info = mx_realloc(info->allocator, info, sizeof(mx_darray_info) + required_capacity);
+        info->capacity = required_capacity;
+        info->head = elem_count * info->element_size;
+    }
+
+    *darray_ptr = (uint8_t*)info + sizeof(mx_darray_info);
+}
+
+void mx_darray_clear_impl(mx_darray* items) {
+    struct mx_darray_info* info =
+        (mx_darray_info*)((uint8_t*)(*items) - sizeof(mx_darray_info));
+    info->head = 0;
+}
+
 void mx_darray_add(mx_darray* darray_ptr, const void* data) {
     MX_ASSERT(darray_ptr != NULL);
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=

@@ -12,7 +12,8 @@ typedef double real_t;
 /**
  * @brief Represents a 2D vector with three real_t components.
  *
- * This vector is used for cartesian coordinates, directions, and other 2D vector calculations.
+ * This vector is used for cartesian coordinates, directions, and other 2D vector
+ * calculations.
  */
 typedef real_t mx_vec2[2];
 #define MX_VEC2_ZERO {0.0f, 0.0f}
@@ -20,7 +21,8 @@ typedef real_t mx_vec2[2];
 /**
  * @brief Represents a 3D vector with three real_t components.
  *
- * This vector is used for spatial coordinates, directions, and other 3D vector calculations.
+ * This vector is used for spatial coordinates, directions, and other 3D vector
+ * calculations.
  */
 #ifndef MX_SIMD
 typedef real_t mx_vec3[3];
@@ -43,16 +45,18 @@ typedef union mx_vec3 {
     };
 } mx_vec3;
 
-#define MX_VEC3_ZERO (mx_vec3){0.0, 0.0, 0.0}
-#define MX_VEC3_ONE  (mx_vec3){1.0, 1.0, 1.0}
-#define MX_VEC3_UP   (mx_vec3){0.0, 1.0, 0.0}
+#define MX_VEC3_ZERO  (mx_vec3){0.0, 0.0, 0.0}
+#define MX_VEC3_ONE   (mx_vec3){1.0, 1.0, 1.0}
+#define MX_VEC3_UP    (mx_vec3){0.0, 1.0, 0.0}
+#define MX_VEC3_RIGHT (mx_vec3){1.0, 0.0, 0.0}
 
 #endif
 
 /**
  * @brief Represents a 4D vector with four real_t components.
  *
- * This vector is typically used for homogeneous coordinates or other 4D vector operations.
+ * This vector is typically used for homogeneous coordinates or other 4D vector
+ * operations.
  */
 typedef union mx_vec4 {
     real_t elements[4];
@@ -82,7 +86,8 @@ typedef int mx_ivec2[2];
 /**
  * @brief Represents a 3D vector with three signed 32 bit int components.
  *
- * This vector is used for spatial coordinates, directions, and other 3D vector calculations.
+ * This vector is used for spatial coordinates, directions, and other 3D vector
+ * calculations.
  */
 #ifndef MX_SIMD
 typedef real_t mx_ivec3[3];

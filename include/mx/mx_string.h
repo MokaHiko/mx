@@ -32,6 +32,8 @@ extern "C" {
 
 MX_API MX_NO_DISCARD mx_str mx_str_allocate(size_t len, mx_allocator_t allocator);
 MX_API MX_NO_DISCARD mx_str mx_str_create(const char* str, mx_allocator_t allocator);
+
+// @returns the lenght of the string including the termination character '\0'
 MX_API MX_NO_DISCARD size_t mx_strlen(mx_str string);
 
 MX_API void mx_str_destroy(mx_str string, mx_allocator_t allocator);

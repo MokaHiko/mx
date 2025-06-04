@@ -2,9 +2,11 @@
 #define MX_HASH_H_
 
 #include "mx/mx.h"
+#include "mx/mx_asserts.h"
 #include <uthash/uthash.h>
 
 MX_API void mx_murmur_hash_32(const void* key, int len, uint32_t seed, uint32_t* out);
+MX_API uint32_t mx_murmur_hash(const void* key, int len, uint32_t seed);
 
 #define mx_map_t(key_t, value_t, elem_count)                                             \
     typedef struct {                                                                     \
