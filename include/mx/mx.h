@@ -44,7 +44,16 @@
     #define MX_NO_VTABLE
 #endif
 
-#define MX_SUCCESS (uint16_t)0
+typedef enum mx_result {
+    MX_SUCCESS = 0,
+
+    MX_FAILURE,
+    MX_INVALID_PARAMETER,
+    MX_NULL_POINTER,
+    MX_OUT_OF_MEMORY,
+
+    MX_RESULT_MAX = 0xFF
+} mx_result;
 
 typedef uint32_t mx_bool;
 #define MX_FALSE (uint32_t)0
