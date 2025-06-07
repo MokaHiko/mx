@@ -80,8 +80,20 @@ typedef union mx_vec4 {
  * @brief Represents a 2D vector with three signed 32 bit int components.
  *
  */
-typedef int mx_ivec2[2];
-#define MX_IVEC2_ZERO {0, 0}
+#ifndef MX_SIMD
+typedef real_t mx_ivec2[2];
+#define MX_IVEC3_ZERO (mx_vec3){0, 0, 0}
+#else
+typedef union mx_ivec2 {
+    int elements[2];
+
+    struct {
+        int x, y;
+    };
+
+} mx_ivec2;
+#define MX_IVEC3_ZERO {0, 0, 0, 0}
+#endif
 
 /**
  * @brief Represents a 3D vector with three signed 32 bit int components.

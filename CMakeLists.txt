@@ -15,6 +15,7 @@ endif()
 
 target_include_directories(mx PUBLIC include)
 target_include_directories(mx PUBLIC third_party)
+target_compile_options(mx PRIVATE -Werror)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")

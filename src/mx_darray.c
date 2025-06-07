@@ -51,7 +51,7 @@ void mx_darray_clear_impl(mx_darray* items) {
     info->head = 0;
 }
 
-void mx_darray_add(mx_darray* darray_ptr, const void* data) {
+void mx_darray_add_impl(mx_darray* darray_ptr, const void* data) {
     MX_ASSERT(darray_ptr != NULL);
     MX_ASSERT((mx_darray_info*)((uint8_t*)(*darray_ptr) - sizeof(mx_darray_info)) !=
               NULL);
