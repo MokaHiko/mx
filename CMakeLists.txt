@@ -15,7 +15,6 @@ endif()
 
 target_include_directories(mx PUBLIC include)
 target_include_directories(mx PUBLIC third_party)
-target_compile_options(mx PRIVATE -Werror)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
@@ -31,6 +30,7 @@ endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     target_compile_definitions(mx PUBLIC MX_CLANG=1)
+    target_compile_options(mx PRIVATE -Werror)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

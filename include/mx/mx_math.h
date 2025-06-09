@@ -208,6 +208,10 @@ MX_API MX_NO_DISCARD static inline mx_vec4 mx_vec4_norm(mx_vec4 a) {
     return mx_mulv4f(a, mx_invsqrt(mx_vec4_dot(a, a)));
 };
 
+MX_API MX_NO_DISCARD static inline mx_vec4 mx_vec4_scale(mx_vec4 a, float s) {
+    return (mx_vec4) { a.x* s, a.y* s, a.z* s, a.w* s };
+}
+
 MX_API MX_NO_DISCARD static inline mx_quat mx_quat_norm(mx_quat quat) {
     mx_vec4 vec = {quat.x, quat.y, quat.z, quat.w};
     vec = mx_vec4_norm(vec);

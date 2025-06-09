@@ -23,7 +23,7 @@ MX_API void mx_log(mx_log_level level, const char* fmt, ...);
 #endif
 
 // Variadic macros (handles empty __VA_ARGS__ safely in C++)
-// #define MX_LOG_TRACE(...) mx_log(MX_LOG_LEVEL_TRACE, ##__VA_ARGS__)
+//#define MX_LOG_TRACE(...) mx_log(MX_LOG_LEVEL_TRACE, ##__VA_ARGS__)
 #define MX_LOG_TRACE(...)
 
 #define MX_LOG_INFO(...)  mx_log(MX_LOG_LEVEL_INFO,  ##__VA_ARGS__)

@@ -49,6 +49,7 @@ typedef union mx_vec3 {
 #define MX_VEC3_ONE   (mx_vec3){1.0, 1.0, 1.0}
 #define MX_VEC3_UP    (mx_vec3){0.0, 1.0, 0.0}
 #define MX_VEC3_RIGHT (mx_vec3){1.0, 0.0, 0.0}
+#define MX_VEC3_FORWARD (mx_vec3){0.0, 1.0, 0.0}
 
 #endif
 
