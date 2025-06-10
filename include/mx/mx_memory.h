@@ -51,7 +51,7 @@ MX_API inline static void* mx_linear_allocate(void* user_data, size_t len) {
 };
 
 MX_API inline static void mx_arena_reset(mx_allocator_t arena_allocator) {
-    mx_buffer* buffer = arena_allocator.user_data;
+    mx_buffer* buffer = (mx_buffer*)arena_allocator.user_data;
     buffer->head = 0;
 }
 
