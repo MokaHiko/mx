@@ -1,4 +1,4 @@
-#ifndef MX_MATH_MTX_H_
+#ifdef MX_MATH_MTX_H_
 #define MX_MATH_MTX_H_
 
 #include "mx.h"

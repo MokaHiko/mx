@@ -31,7 +31,7 @@ extern "C" {
 #endif
 
 // @brief default arena allocator
-MX_API inline static void* mx_linear_allocate(void* user_data, size_t len) {
+inline static void* mx_linear_allocate(void* user_data, size_t len) {
     // assert(len > 0 && "[Mx]: Arena push with size 0!");
     mx_buffer* buffer = (mx_buffer*)user_data;
 
@@ -50,7 +50,7 @@ MX_API inline static void* mx_linear_allocate(void* user_data, size_t len) {
     return alloc;
 };
 
-MX_API inline static void mx_arena_reset(mx_allocator_t arena_allocator) {
+inline static void mx_arena_reset(mx_allocator_t arena_allocator) {
     mx_buffer* buffer = (mx_buffer*)arena_allocator.user_data;
     buffer->head = 0;
 }

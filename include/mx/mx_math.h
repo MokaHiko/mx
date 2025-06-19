@@ -40,7 +40,7 @@ MX_API MX_NO_DISCARD real_t mx_lerpf(float a, float b, float t);
 
 MX_API MX_NO_DISCARD mx_vec3 mx_vec3_norm(mx_vec3 a);
 
-MX_API MX_NO_DISCARD static inline mx_bool mx_vec3_eqv(mx_vec3 left, mx_vec3 right) {
+MX_NO_DISCARD static inline mx_bool mx_vec3_eqv(mx_vec3 left, mx_vec3 right) {
     return left.x == right.x && left.y == right.y && left.z == right.z;
 }
 
@@ -135,7 +135,7 @@ MX_API MX_NO_DISCARD mx_ivec3 mx_ivec3_sub(mx_ivec3 a, mx_ivec3 b);
  */
 MX_API MX_NO_DISCARD mx_ivec3 mx_ivec3_mul(mx_ivec3 a, mx_ivec3 b);
 
-MX_API MX_NO_DISCARD static inline real_t mx_vec4_dot(mx_vec4 left, mx_vec4 right) {
+MX_NO_DISCARD static inline real_t mx_vec4_dot(mx_vec4 left, mx_vec4 right) {
     float result;
 
     // note(zak): in the future if we wanna check what version sse is support
@@ -160,7 +160,7 @@ MX_API MX_NO_DISCARD static inline real_t mx_vec4_dot(mx_vec4 left, mx_vec4 righ
     return result;
 }
 
-MX_API MX_NO_DISCARD static inline mx_vec4 mx_mulv4f(mx_vec4 left, float right) {
+MX_NO_DISCARD static inline mx_vec4 mx_mulv4f(mx_vec4 left, float right) {
     mx_vec4 result;
 
 #ifdef mx_math__use_sse
@@ -196,7 +196,7 @@ static inline float mx_sqrt(real_t a) {
     return result;
 }
 
-MX_API MX_NO_DISCARD static inline float mx_invsqrt(real_t a) {
+MX_NO_DISCARD static inline float mx_invsqrt(real_t a) {
     float result;
 
     result = 1.0f / mx_sqrt(a);
@@ -204,15 +204,15 @@ MX_API MX_NO_DISCARD static inline float mx_invsqrt(real_t a) {
     return result;
 }
 
-MX_API MX_NO_DISCARD static inline mx_vec4 mx_vec4_norm(mx_vec4 a) {
+MX_NO_DISCARD static inline mx_vec4 mx_vec4_norm(mx_vec4 a) {
     return mx_mulv4f(a, mx_invsqrt(mx_vec4_dot(a, a)));
 };
 
-MX_API MX_NO_DISCARD static inline mx_vec4 mx_vec4_scale(mx_vec4 a, float s) {
+MX_NO_DISCARD static inline mx_vec4 mx_vec4_scale(mx_vec4 a, float s) {
     return (mx_vec4) { a.x* s, a.y* s, a.z* s, a.w* s };
 }
 
-MX_API MX_NO_DISCARD static inline mx_quat mx_quat_norm(mx_quat quat) {
+MX_NO_DISCARD static inline mx_quat mx_quat_norm(mx_quat quat) {
     mx_vec4 vec = {quat.x, quat.y, quat.z, quat.w};
     vec = mx_vec4_norm(vec);
     mx_quat result = {vec.x, vec.y, vec.z, vec.w};
